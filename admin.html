@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>관리자 - 문적만</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="wrap">
+
+    <div id="login-view" class="admin-login">
+      <div class="title">문적만 · 관리자</div>
+      <form id="login-form">
+        <input type="password" name="password" placeholder="비밀번호" autofocus required />
+        <button type="submit">입장</button>
+      </form>
+      <div class="admin-error" id="login-error"></div>
+    </div>
+
+    <div id="admin-view" style="display:none">
+      <div class="admin-bar">
+        <div class="title" style="font-family:'Newsreader',serif;font-size:26px">글 관리</div>
+        <div style="display:flex; gap:8px">
+          <a href="index.html" class="back-link" style="margin-right:12px">블로그 보기</a>
+          <button class="ghost" id="logout-btn">로그아웃</button>
+        </div>
+      </div>
+
+      <form class="editor" id="editor-form">
+        <input type="hidden" name="id" />
+        <input type="text" name="title" placeholder="제목" required />
+        <textarea name="content" placeholder="내용을 적어주세요" required></textarea>
+        <div class="row">
+          <label class="checkbox-row">
+            <input type="checkbox" name="published" checked style="width:auto;padding:0" />
+            공개 (체크 해제 시 임시저장/비공개)
+          </label>
+        </div>
+        <div class="row">
+          <button type="submit" id="editor-submit">글 저장</button>
+          <button type="button" class="ghost" id="editor-cancel" style="display:none">새 글 작성으로</button>
+        </div>
+      </form>
+
+      <div id="post-list"></div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabaseClient.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
