@@ -113,4 +113,4 @@ git push -u origin main
 - 관리자 비밀번호 변경: Supabase 대시보드 → Authentication → Users → 해당 유저 → 비밀번호 재설정
 - 디자인/색상: `css/style.css` 수정
 - 마크다운 글쓰기 지원, 이미지 업로드(Supabase Storage), 댓글 스팸 방지(캡차) 등은 추가 개발이 필요하며 요청 시 이어서 작업 가능합니다.
-
+ 
