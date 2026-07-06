@@ -6,6 +6,7 @@
 <title>관리자 - 문적만</title>
 <meta name="robots" content="noindex, nofollow" />
 <link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
 </head>
 <body>
   <div class="wrap">
@@ -31,7 +32,21 @@
       <form class="editor" id="editor-form">
         <input type="hidden" name="id" />
         <input type="text" name="title" placeholder="제목" required />
-        <textarea name="content" placeholder="내용을 적어주세요" required></textarea>
+
+        <div class="editor-toolbar">
+          <button type="button" class="ghost small" id="insert-image-btn">🖼 이미지 삽입</button>
+          <button type="button" class="ghost small" id="insert-latex-btn">Σ 수식 삽입</button>
+          <span class="toolbar-spacer"></span>
+          <div class="tabs">
+            <button type="button" class="tab-btn active" data-tab="write">작성</button>
+            <button type="button" class="tab-btn" data-tab="preview">미리보기</button>
+          </div>
+        </div>
+        <input type="file" id="image-file-input" accept="image/*" style="display:none" />
+
+        <textarea name="content" id="content-textarea" placeholder="내용을 적어주세요. 이미지/수식 삽입 버튼을 쓰거나, $x^2$ 처럼 직접 라텍스 문법을 써도 됩니다." required></textarea>
+        <div id="preview-pane" class="post-body" style="display:none"></div>
+
         <div class="row">
           <label class="checkbox-row">
             <input type="checkbox" name="published" checked style="width:auto;padding:0" />
@@ -50,6 +65,11 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script src="js/render.js"></script>
   <script src="js/supabaseClient.js"></script>
   <script src="js/admin.js"></script>
 </body>

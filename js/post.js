@@ -87,7 +87,7 @@ async function init() {
       <span>${formatDate(post.created_at)}</span>
       <span>조회 ${post.view_count ?? 0}</span>
     </div>
-    <div class="post-body">${escapeHtml(post.content)}</div>
+    <div class="post-body" id="post-body"></div>
 
     <section class="comments">
       <h2>댓글</h2>
@@ -103,6 +103,7 @@ async function init() {
   `;
 
   document.getElementById('comment-form').addEventListener('submit', submitComment);
+  renderPostBody(document.getElementById('post-body'), post.content);
 }
 
 init();

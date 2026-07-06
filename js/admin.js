@@ -16,6 +16,72 @@ const loginError = document.getElementById('login-error');
 const editorForm = document.getElementById('editor-form');
 const editorCancel = document.getElementById('editor-cancel');
 const postListEl = document.getElementById('post-list');
+const contentTextarea = document.getElementById('content-textarea');
+const previewPane = document.getElementById('preview-pane');
+const tabButtons = document.querySelectorAll('.tab-btn');
+const imageFileInput = document.getElementById('image-file-input');
+const insertImageBtn = document.getElementById('insert-image-btn');
+
+function switchTab(tab) {
+  tabButtons.forEach(b => b.classList.toggle('active', b.getAttribute('data-tab') === tab));
+  if (tab === 'preview') {
+    previewPane.style.display = 'block';
+    contentTextarea.style.display = 'none';
+    renderPostBody(previewPane, contentTextarea.value.trim() || '_아직 내용이 없습니다._');
+  } else {
+    previewPane.style.display = 'none';
+    contentTextarea.style.display = 'block';
+  }
+}
+
+tabButtons.forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.getAttribute('data-tab')));
+});
+
+// 커서 위치에 텍스트 삽입
+function insertAtCursor(text) {
+  const start = contentTextarea.selectionStart ?? contentTextarea.value.length;
+  const end = contentTextarea.selectionEnd ?? contentTextarea.value.length;
+  const before = contentTextarea.value.slice(0, start);
+  const after = contentTextarea.value.slice(end);
+  contentTextarea.value = before + text + after;
+  contentTextarea.focus();
+  return start; // 삽입 시작 위치 반환 (커서 재배치용)
+}
+
+// 수식 삽입: $$  $$ 틀을 넣고 커서를 가운데에 둔다
+document.getElementById('insert-latex-btn').addEventListener('click', () => {
+  const start = insertAtCursor('$$  $$');
+  contentTextarea.setSelectionRange(start + 3, start + 3);
+});
+
+// 이미지 삽입: 버튼 클릭 -> 파일 선택창 열기
+insertImageBtn.addEventListener('click', () => imageFileInput.click());
+
+imageFileInput.addEventListener('change', async () => {
+  const file = imageFileInput.files[0];
+  if (!file) return;
+
+  insertImageBtn.disabled = true;
+  insertImageBtn.textContent = '업로드 중…';
+
+  const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+  const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+
+  const { error } = await supabaseClient.storage.from('post-images').upload(path, file);
+
+  insertImageBtn.disabled = false;
+  insertImageBtn.textContent = '🖼 이미지 삽입';
+  imageFileInput.value = '';
+
+  if (error) {
+    alert('이미지 업로드 실패: ' + error.message);
+    return;
+  }
+
+  const { data } = supabaseClient.storage.from('post-images').getPublicUrl(path);
+  insertAtCursor(`\n![이미지](${data.publicUrl})\n`);
+});
 
 function showAdmin() {
   loginView.style.display = 'none';
@@ -60,6 +126,7 @@ function resetEditor() {
   editorForm.published.checked = true;
   document.getElementById('editor-submit').textContent = '글 저장';
   editorCancel.style.display = 'none';
+  switchTab('write');
 }
 
 // 글 저장 (신규/수정)
@@ -103,6 +170,7 @@ function editPost(post) {
   editorForm.published.checked = post.published;
   document.getElementById('editor-submit').textContent = '수정 저장';
   editorCancel.style.display = 'inline-block';
+  switchTab('write');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 

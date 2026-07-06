@@ -72,3 +72,28 @@ end;
 $$;
 
 grant execute on function increment_view_count(uuid) to anon, authenticated;
+
+-- ============================================
+-- 이미지 업로드용 Storage 버킷 (글 본문에 이미지 삽입)
+-- ============================================
+
+insert into storage.buckets (id, name, public)
+values ('post-images', 'post-images', true)
+on conflict (id) do nothing;
+
+-- 누구나 이미지 조회 가능 (공개 버킷이라 사실상 필요 없지만 명시적으로 추가)
+create policy "public read post images"
+  on storage.objects for select
+  using (bucket_id = 'post-images');
+
+-- 로그인한 사람(관리자)만 업로드 가능
+create policy "admin upload post images"
+  on storage.objects for insert
+  to authenticated
+  with check (bucket_id = 'post-images');
+
+-- 로그인한 사람(관리자)만 삭제 가능
+create policy "admin delete post images"
+  on storage.objects for delete
+  to authenticated
+  using (bucket_id = 'post-images');

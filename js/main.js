@@ -17,8 +17,17 @@ function formatDate(iso) {
   return d.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' });
 }
 
+function stripMarkdown(text) {
+  return text
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, '')   // 이미지
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1') // 링크는 텍스트만 남김
+    .replace(/\$\$[\s\S]*?\$\$/g, '')        // 블록 수식
+    .replace(/\$[^$\n]*\$/g, '')             // 인라인 수식
+    .replace(/[#*_`>~-]/g, '');              // 마크다운 기호
+}
+
 function excerpt(text, len = 90) {
-  const clean = text.replace(/\s+/g, ' ').trim();
+  const clean = stripMarkdown(text).replace(/\s+/g, ' ').trim();
   return clean.length > len ? clean.slice(0, len) + '…' : clean;
 }
 
