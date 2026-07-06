@@ -1,6 +1,6 @@
 # 문적만 블로그
 
-Supabase(DB) + GitHub Pages(호스팅)로 만든 개인 블로그입니다.
+Supabase(DB) + GitHub Pages(호스팅)로 만든 개인 블로그입니다.!
 
 - `blog.munjeokman.kro.kr` 접속 → 글 목록, 조회수, 댓글이 보이는 블로그
 - `blog.munjeokman.kro.kr/?key=admin` 접속 → 비밀번호(0508) 입력 후 글쓰기/수정/삭제 가능한 관리자 페이지
